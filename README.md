@@ -12,13 +12,13 @@ Prerequisites
 
 To build Android projects from your Scratch projects, the following are *required* dependencies:
 
-	* [Apache Ant](http://ant.apache.org/) version 1.5 or higher (Recommended 1.6+).
-	* [Android SDK](http://developer.android.com/sdk/index.html) for building your generated projects.
+* [Apache Ant](http://ant.apache.org/) version 1.5 or higher (Recommended 1.6+).
+* [Android SDK](http://developer.android.com/sdk/index.html) for building your generated projects.
 
 The following, although not _required_, are highly *recommended* as they will make building and deploying your projects much easier:
 
-	* [Eclipse IDE](http://eclipse.org/) (Recommend _Eclipse Juno_)
-	* [Android ADT for Eclipse](http://developer.android.com/tools/sdk/eclipse-adt.html)
+* [Eclipse IDE](http://eclipse.org/) (Recommend _Eclipse Juno_)
+* [Android ADT for Eclipse](http://developer.android.com/tools/sdk/eclipse-adt.html)
 
 Please note that, at present, ScratchToAndroid is not a "one-stop" solution for building Android applications from your Scratch projects. If you are not comfortable using the tools mentioned above, then you are quite likely to run into problems. Please do not request support for such issues from the Scratch2Android authors.
 
