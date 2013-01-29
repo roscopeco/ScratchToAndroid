@@ -1,0 +1,56 @@
+#!/bin/sh
+
+OPTIND=1
+
+project_name=""
+package=""
+scratch_file=""
+verbose=""
+
+usage()
+{
+  cat << EOF
+  usage: $0 [-h|?] [-i] -i <input file.sb> -p <package.name> -n <ProjectName>
+
+  Generates a zipped Eclipse Android Developer Tooling (ADT) project from the
+  specified Scratch 1.4 project file.
+
+  Please note that this script wraps around an Apache Ant build script. Ant
+  1.5+ (recommended: 1.6+) must be present in your path!
+
+  The completed project will be generated in <ProjectName>.zip.
+
+  OPTIONS:
+    -h -?   Show this message
+    -i      The Scratch project file (e.g. MyProject.sb)
+    -p      The Java package to generate code in (e.g. com.myproject)
+    -n      The name of the project to create (e.g. MyProject)
+    -v      Verbose mode (Enables Ant verbosity)
+EOF
+}
+
+while getopts "h?vi:n:p:" opt; do
+    case "$opt" in
+    h|\?)
+        usage
+        exit 1
+        ;;
+    v)  verbose="-v"
+        ;;
+    i)  scratch_file=$OPTARG
+        ;;
+    p)  package=$OPTARG
+        ;;
+    n)  project_name=$OPTARG
+        ;;
+    esac
+done
+
+if [[ -z $scratch_file ]] || [[ -z $project_name ]] || [[ -z $package ]]
+then
+  usage
+  exit 1
+fi
+
+ant -buildfile $(dirname "$0")/generate.xml $verbose -DSCRATCHFILE=$scratch_file -DPROJECTNAME=$project_name -DPKG=$package
+

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="Scratch2Android" basedir="." default="generate">
+	<property file="${basedir}/generate.properties"/>
+	
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+        	 classpath="${gen.lib}/ant-contrib.jar"/>
+    	
+    <!-- Process command line -->
+    <target name="_check-args">
+        <fail unless="SCRATCHFILE" 
+              message="-DSCRATCHFILE=&lt;scratch project.sb&gt; argument must be supplied"/>
+        <fail unless="PKG" 
+              message="-DPKG=&lt;package name&gt; argument must be supplied"/>
+        <fail unless="PROJECTNAME" 
+              message="-DPROJECTNAME=&lt;ProjectName&gt; argument must be supplied"/>
+        <if>
+            <not><isset property="DESTFILE"/></not>
+            <then>
+                <property name="DESTFILE" value="${basedir}/${PROJECTNAME}.zip"/>                
+            </then>
+        </if>        
+    </target>
+    
+	<!-- Make directories -->
+	<target name="_make-builddirs">
+	    <delete dir="${build.dir}" quiet="true"/>
+		<mkdir dir="${build.dir}"/>
+	</target>
+	
+	<!--  Copy template project -->
+	<target name="_copy-template">
+		<copy todir="${build.dir}">
+			<fileset dir="${basedir}">
+				<include name="src/**"/>
+				<include name="res/**"/>
+				<include name="assets/**"/>
+				<include name="libs/**"/>
+				<include name="AndroidManifest.xml"/>
+				<include name="ic_launcher-web.png"/>
+				<include name="proguard-project.txt"/>
+				<include name="project.properties"/>
+				<include name=".project"/>
+				<include name=".classpath"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- Put everything in correct packages -->
+	<target name="_fix-java-packages">
+	    <replace file="${build.dir}/src/com/roscopeco/scratch/template/Main.java" value="${PKG}">
+	        <replacetoken>com.roscopeco.scratch.template</replacetoken>
+	    </replace>
+	    
+	    <!--  convert package to directory name -->
+	    <propertyregex input="${PKG}" property="new.package.dir" 
+	        		   regexp="\." 
+	        		   replace="${file.separator}" 
+	        		   global="true" 
+	        		   defaultValue="${PKG}"/>
+	    
+	    <!--  move directory -->
+	    <move file="${build.dir}/src/com/roscopeco/scratch/template" 
+	          tofile="${build.dir}/src/${new.package.dir}" />
+	</target>
+	
+	<!-- Fix project metadata -->
+	<target name="_fix-metadata">
+	    <replace file="${build.dir}/AndroidManifest.xml" value="${PKG}">
+	        <replacetoken>com.roscopeco.scratch.template</replacetoken>
+	    </replace>
+	    <replace file="${build.dir}/.project" value="${PROJECTNAME}">
+	        <replacetoken>ScratchToAndroid</replacetoken>
+	    </replace>
+	    <replace file="${build.dir}/.classpath" value="">
+	        <replacetoken><![CDATA[<classpathentry kind="src" path="placeholders"/>]]></replacetoken>
+	    </replace>
+	</target>
+	
+	<!-- Generate code from Scratch file -->
+	<target name="_generate-scratch">
+	    <!--  java -jar gen-lib/etc... -->
+	    <java jar="${gen.lib}/scratch2java.jar" fork="true" failOnError="true">
+	        <arg value="${SCRATCHFILE}"/>
+	        <arg value="${PKG}"/>
+	        <arg value="${build.dir}/src"/>
+	        <arg value="${build.dir}/res"/>
+	    </java>
+	</target>
+	
+	<!-- Zip project up for Eclipse import -->
+	<target name="_zip-project">
+		<zip destfile="${DESTFILE}" basedir="${build.dir}" includes="**/*"/>
+	</target>
+
+	<!-- Main targets -->	
+	<target name="generate" description="Generate a zipped ADT project" 
+	    	depends="_check-args, _make-builddirs, _copy-template, _fix-java-packages, _fix-metadata, _generate-scratch, _zip-project"/>		
+</project>
