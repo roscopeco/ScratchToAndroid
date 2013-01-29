@@ -27,7 +27,7 @@ Usage
 
 Android projects are generated from the included template project using Apache Ant. If you are running Linux (or possibly Mac OS X) a bash wrapper script is included that will take care of running Ant for you, passing in the appropriate options. An example command:
 
-`$ ./generate samples/simple3.sb -n Simple3 -p com.roscopeco.scratch.sample3`
+`$ ./generate -i samples/simple3.sb -n Simple3 -p com.roscopeco.scratch.sample3`
 
 An explanation of the options can be found by running generate with a single `-h` option.
 
