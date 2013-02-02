@@ -8,7 +8,7 @@ import com.roscopeco.scratch.runtime.AbstractStage;
  * it will be replaced with generated code.
  */
 public class Objects {
-  public static AbstractSprite[] sprites;
+  public static AbstractSprite[] sprites = new AbstractSprite[0];
   public static AbstractStage stage;
   
   public static void initialize() { }

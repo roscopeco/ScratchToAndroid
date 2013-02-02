@@ -2,22 +2,24 @@ package com.roscopeco.scratch.runtime.android;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-
-import android.util.Log;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.roscopeco.scratch.runtime.AbstractScript;
 import com.roscopeco.scratch.runtime.ScriptController;
 
 public class AndroidScriptController extends ScriptController {
   private ArrayList<AbstractScript> startScripts = new ArrayList<AbstractScript>();
-  private LinkedList<RunningScriptWrapper> runningScripts = new LinkedList<RunningScriptWrapper>();
+  //private LinkedList<RunningScriptWrapper> runningScripts = new LinkedList<RunningScriptWrapper>();
   private HashMap<String, ArrayList<AbstractScript>> broadcastReceivers = new HashMap<String, ArrayList<AbstractScript>>();
   private HashMap<String, Object> vars = new HashMap<String, Object>();
+  private ScriptThreadFactory factory = new ScriptThreadFactory();
+  private ExecutorService exec = Executors.newCachedThreadPool(factory);
   
   private volatile boolean isRunning = false;
   private Thread mainLoop;
   
+  /*
   class RunningScriptWrapper implements Runnable {
     Runnable delegate;
     Thread thread;
@@ -47,13 +49,19 @@ public class AndroidScriptController extends ScriptController {
     Log.d("<AndroidScriptController>", "Removing " + script.delegate + " from running list");
     runningScripts.remove(script);
   }
+  */
   
-  Thread startScript(AbstractScript script) {
+  //Thread startScript(AbstractScript script) {        
+  void startScript(AbstractScript script) {        
+    exec.execute(script);
+    
+    /*
     RunningScriptWrapper w = new RunningScriptWrapper(script);
     Thread t = new Thread(w);
     w.thread = t;
     t.start();
-    return t;    
+    return t;
+    */    
   }
   
   public void registerMainLoop(Thread mainLoop) {
@@ -163,10 +171,13 @@ public class AndroidScriptController extends ScriptController {
   public void stopAll() {
     synchronized (startStopMonitor) {
       if (isRunning) {
+        /*
         for (RunningScriptWrapper w : runningScripts) {
           w.thread.interrupt();
         }
+        */
         mainLoop.interrupt();
+        exec.shutdownNow();
         isRunning = false;
       }
     }    
