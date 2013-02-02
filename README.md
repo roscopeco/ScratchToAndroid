@@ -35,10 +35,20 @@ If you are on Windows, you will have to run Ant manually, passing in the options
 
 `c:\> ant -buildfile generate.xml -DSCRATCHFILE=samples\simple3.sb -DPROJECTNAME=Simple3 -DPKG=com.roscopeco.scratch.simple3`
 
+These commands will generate a zipped Eclipse project in the current directory, named `<projectname>.zip` (e.g. in the examples above, `Simple3.zip` would be created). This can be directly imported into Eclipse with the following steps:
+
+* Select *File* -> *Import...*
+* Under *General*, select *Existing projects into workspace*.
+* Ensure the *Archive file* option is checked, and enter (or browse for the Zip file created by the generator).
+* Ensure that the project is checked in the main part of the dialog (it will be by default), and click *Finish*.
+* Your new Android project is now ready to build and deploy!
+
+Please note that the above instructions are for Eclipse Juno. The procedure varies slightly on other version of Eclipse.
+
 Samples
 -------
 
-A small number of sample Scratch projects are included with the distribution, in the `samples` directory. These Scratch projects do not make use of any features that are not currently supported by the Android runtime.
+A small number of sample Scratch projects are included with the distribution, in the `samples` directory. These Scratch projects do not make use of any features that are not currently supported by the Android runtime. Please note that they do not (yet) all function correctly.
 
 Notes
 -----
