@@ -1,3 +1,5 @@
+> **note**: This repository is archived and development / support is discontinued.
+
 Scratch2Android (Convert Scratch project files to Android apps)
 ===============================================================
 
